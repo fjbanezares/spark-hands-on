@@ -1,0 +1,26 @@
+
+
+Cluster web interfaces: https://cloud.google.com/dataproc/docs/concepts/accessing/cluster-web-interfaces?hl=en
+  YARN resource manager:
+    basic: http://master-host-name:8088
+    Kerberized cluster: https://master-host-name:8090
+  Hadoop Distributed File System (HDFS):
+    basic: http://master-host-name:9870
+    Kerberized cluster: https://master-host-name:9871
+
+  Allowed YARN ResourceManager REST APIs: https://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/ResourceManagerRest.html
+    default: yarn.resourcemanager.webapp.methods-allowed="GET,HEAD"
+    optional: gcloud dataproc clusters create --properties='yarn:yarn.resourcemanager.webapp.methods-allowed=GET,POST,DELETE' --region=region
+    all: gcloud dataproc clusters create --properties='yarn:yarn.resourcemanager.webapp.methods-allowed=ALL' --region=region
+
+  MapReduce
+Spark
+
+options to connect UI:
+  -  Dataproc Component Gateway
+  -  connect to web interfaces running on your Dataproc cluster using an SSH tunnel from your local network or Google Cloud Cloud Shell to your cluster's Compute Engine network
+
+Initialization Actions: https://github.com/GoogleCloudDataproc/initialization-actions
+Include Apache Flink in Dataproc cluster: https://cloud.google.com/dataproc/docs/concepts/components/flink
+
+Intro Lab: https://codelabs.developers.google.com/codelabs/cloud-dataproc-gcloud#1
