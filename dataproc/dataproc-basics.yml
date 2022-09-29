@@ -24,3 +24,6 @@ Initialization Actions: https://github.com/GoogleCloudDataproc/initialization-ac
 Include Apache Flink in Dataproc cluster: https://cloud.google.com/dataproc/docs/concepts/components/flink
 
 Intro Lab: https://codelabs.developers.google.com/codelabs/cloud-dataproc-gcloud#1
+python API: https://github.com/googleapis/python-dataproc
+examples: https://github.com/GoogleCloudDataproc/cloud-dataproc
+Hive use in Dataproc example: https://cloud.google.com/architecture/using-apache-hive-on-cloud-dataproc
