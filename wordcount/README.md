@@ -28,20 +28,31 @@ gsutil is a tool that lets you access Cloud Storage from the command line
 gsutil mb gs://$PROJECT_ID
 ```
 
+##### Clone this repo in your gcloud machine
+```shell
+git clone https://github.com/fjbanezares/spark-hands-on.git
+cd spark-hands-on/wordcount/
+```
+
 ##### Copy of files in the bucket
 ```shell
-gsutil -m cp animal-funny-names.txt gs://ufv_pyspark_wc_demo-developer-javi
-gsutil -m cp spark-wordcount.py gs://ufv_pyspark_wc_demo-developer-javi
-``` 
+gsutil -m cp animal-funny-names.txt gs://$PROJECT_ID
+gsutil -m cp spark-wordcount.py gs://$PROJECT_ID
+gsutil ls gs://$PROJECT_ID
+```
 
 ### Create a Dataproc cluster
 ```shell
-gcloud dataproc clusters create ufv-dataproc-cluster --region=us-central1
-
+gcloud dataproc clusters create $PROJECT_ID --region=us-central1
+# This will take minutes to procure
+gcloud dataproc clusters list --region=us-central1
 ```
 
 ### Run Spark Job
-gcloud dataproc jobs submit pyspark gs://ufv_pyspark_wc_demo-developer-javi/spark-wordcount.py
+gcloud dataproc jobs submit pyspark gs://$PROJECT_ID/spark-wordcount.py
 
 
+```shell
+gcloud dataproc jobs submit pyspark gs://$PROJECT_ID/spark-wordcount.py --cluster $PROJECT_ID --region us-central1
+```
 

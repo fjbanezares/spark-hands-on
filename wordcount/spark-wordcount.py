@@ -5,7 +5,7 @@ from pyspark import SparkContext
 # we will just execute all in the Master Node without distributing the load
 sc = SparkContext("local")
 
-file = sc.textFile("gs://ufv_pyspark_wc_demo-developer-javi/animal-funny-names.txt")
+file = sc.textFile("gs://ufv-pyspark-wc-javi/animal-funny-names.txt")
 
 # creation of key value pairs being the value a list
 dataLines = file.map(lambda s: s.split(",")).map(lambda x: (x[0], [x[1]]))
