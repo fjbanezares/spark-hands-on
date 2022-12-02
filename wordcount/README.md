@@ -92,7 +92,6 @@ Now it works fine and the result should show something like this:
 ```shell
 gcloud dataproc clusters delete $PROJECT_ID --region us-central1
 gcloud dataproc clusters list --region=us-central1
-
 ```
 
 ##### Decommission Project

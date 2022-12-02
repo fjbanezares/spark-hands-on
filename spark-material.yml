@@ -1,0 +1,13 @@
+old-complete-presentation-scala: https://docplayer.net/3895206-The-spark-big-data-analytics-platform.html
+same-plus-hadoop: https://docplayer.net/2357775-The-spark-big-data-analytics-platform.html
+
+Databricks:
+  notebook: https://github.com/databricks/tech-talks
+  part1: https://www.youtube.com/watch?v=HBVQAlv8MRQ&list=RDCMUC3q8O3Bh2Le8Rj1-Q-_UUbA&start_radio=1&rv=HBVQAlv8MRQ&t=3320
+  Watch Part 2: https://youtu.be/riSgfbq3jpY
+  Watch Part 3: https://youtu.be/g103iO-izoI
+  Watch Part 4: https://youtu.be/9U4ED7KQwlE\
+
+
+  helm: https://tomlous.medium.com/deploying-apache-spark-jobs-on-kubernetes-with-helm-and-spark-operator-eb1455930435
+
