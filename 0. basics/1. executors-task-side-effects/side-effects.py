@@ -15,7 +15,7 @@ def inside(dummy):
     return x*x + y*y < 1
 
 
-spark = SparkSession.builder.master("local[6]").appName('ufv Pi estimate Spark').getOrCreate()
+spark = SparkSession.builder.master("local[4]").appName('ufv Pi estimate Spark').getOrCreate()
 
 count = spark.sparkContext.parallelize(range(0, NUM_SAMPLES)).filter(inside).count()
 

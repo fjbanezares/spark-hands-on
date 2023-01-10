@@ -12,7 +12,7 @@ def inside(dummy):
     :return: wheher or not a random generated number is between a circle d^2 rectangle, Pi*d^2/4 circle, Pi/4 division
     '''
     x, y = random.random(), random.random()
-    return x*x + y*y < 1
+    return x*x + y*y == 1
 
 
 spark = SparkSession.builder.master("local[6]").appName('ufv Pi estimate Spark').getOrCreate()

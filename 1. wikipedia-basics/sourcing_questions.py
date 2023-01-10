@@ -2,33 +2,28 @@ from pyspark.sql import SparkSession
 
 
 
-
-
 # We have articles of Wikipedia in a Dataset
-# Our
-# https://sparkbyexamples.com/pyspark/pyspark-what-is-sparksession/
+# We will create a ranking on what compute language is mentioned in more articles
 
 
+# toDo read in Python a textfile and store the lines in a List
 # We start by reading the data and storing the text in a variable called lines
-print("READING DATA")
-text_file = open("wikipedia-grading.dat", "r")
-lines = text_file.readlines()
-print(type(lines)) # <class 'list'> we have a list of lines of text here
-print(len(lines))  # 3000 articles from Wikipedia
-print(lines[0])  # "<page><title> Title of it </title><text> bla bla bla </text></page>",
-print(type(lines[0])) # str
-text_file.close() # No longer need access to the  persisted data file
-print("END READING DATA")
+# Use open("wikipedia-grading.dat", "r") function to read from the file
+# use read_lines over the file object to iterate
+# remember to close the file
 ###
 
 
+# toDo create the SparkSession
+# https://sparkbyexamples.com/pyspark/pyspark-what-is-sparksession/
 # Create Spark Session from builder
-spark = SparkSession.builder.master("local[1]") \
-    .appName('ufv example Spark') \
-    .getOrCreate()
+# Use SparkSession object from Spark Python API (define a local number of executors)
+
 #############################################
 
-
+# toDO analyse how we pass from a line in Wikipedia text to a Wikipedia object
+# Create WikipediaArticle Python Class
+# I give you the code but please analyze and understand what we are doing and let me know
 class WikipediaArticle:
     # Class WikipediaArticle, with this we will have an RDD of Wikipedia article objects instead of RDD of text
     # The object has as unique attribute the text in the line of the Wikipedia article
@@ -44,6 +39,7 @@ class WikipediaArticle:
 
     def string_appearence_in_text(self, cadena):
         # Just we say if cadena appears in the text
+        # toDo what I am doing with this map, what is it affecting?
         listita = map((lambda x: x.strip(' ,:;{}')), self.text.split())
         # print(cadena)
         # b = list(listita)
@@ -51,6 +47,7 @@ class WikipediaArticle:
         return cadena in listita
 #####################
 
+# toDo I give you the code, please explain why we are caching the RDD?
 # CACHING
 # The most important outcome here is, whenever you are going to use something several times, use cache()
 # if not you will have to build the rdd every time you use it, huge inefficiency
@@ -71,12 +68,12 @@ for elem in list5:
 
 ###################
 
+# todo def numer_times_language_appear(prog_lan, rdd): ...
+# give us the number of times the word prog_lan appears (in how many lines)
+def numer_times_language_appear(prog_lan, rdd): ...
 
-def numer_times_language_appear(prog_lan, rdd):
-    # To know how many times a language appears in a line of the RDD
-    return rdd.filter(lambda article: article.string_appearence_in_text(prog_lan)).count()
 
-
+# toDo, using numer_times_language_appear we create following function; please explain what we are returning
 def rank_langs(langs, rdd):
     map_of_appareances = {}
     for lang in langs:
@@ -87,11 +84,11 @@ def rank_langs(langs, rdd):
 # https://stackoverflow.com/questions/3783530/python-tuple-to-dict
 # https://realpython.com/sort-python-dictionary/
 
-
+# toDo finish this method similar to the rank_langs that returns the languages ordered in descending order
 def rank_langs_list_ordered(langs, rdd):
     fin_list = list(map(lambda x:(x,numer_times_language_appear(x,rdd)), langs))
     map_from_list = dict(fin_list)
-    ordered_by_value_desc = dict(sorted(map_from_list.items(), key=lambda item: item[1], reverse=True))
+    ordered_by_value_desc = ...
     return ordered_by_value_desc
 
 
@@ -99,8 +96,13 @@ print(numer_times_language_appear("Java", rddWikipediaArticles))
 list_of_languages = ["Java", "Scala", "Python"]
 print(rank_langs_list_ordered(list_of_languages, rddWikipediaArticles))
 
-# Compute an inverted index of the set of articles, mapping each language
-# to the Wikipedia pages in which it occurs.
+
+
+
+# Esta es la parte dos donde vamos a crear un indice invertido y desde ahi resolver directamente el problema
+
+# toDo Compute an inverted index of the set of articles, mapping each language to the Wikipedia pages in which it occurs.
+
 
 pepito = WikipediaArticle("<page><title> Title of it </title><text> Java  Java Scala bla bla bla </text></page>")
 def findLanguages(langs, article):
@@ -110,82 +112,43 @@ def findLanguages(langs, article):
 
 print(findLanguages(list_of_languages,pepito))
 
-print("flatMap nos devuelve...",rddWikipediaArticles.flatMap(lambda articulo:findLanguages(list_of_languages, articulo)).take(50), "el RDD de los lenguajes ")
+print(rddWikipediaArticles.flatMap(lambda articulo:findLanguages(list_of_languages, articulo)).take(500))
+
 
 def generate_maps(article,langs):
-    # genero la lista de lenguajes de un articulo
-    # luego para cada uno mapeo el lenguaje y el articulo
     return list(map(lambda lang:(lang, article),findLanguages(langs, article)))
 
-print("generate maps devuelve...",generate_maps(pepito,list_of_languages), "mapeo del lenguage y el articulo")
+print(generate_maps(pepito,list_of_languages))
 
 
-
+# toDo generate here the inverted index
 def makeIndex(langs, rdd):  # RDD[(String, Iterable[WikipediaArticle])] =
     # primer paso veo los lenguajes que aparecen en el texto
     # para cada uno devuelvo el lenguaje y el articulo de la wikipedia
     # agrupo para que para cada lenguaje tengamos agrupados todos los articulos en los que aparece
+    # usa flatMap que es una función que dada una entrada puede devolver varias salidas en el RDD de salida expandiendo
    return rdd.flatMap(lambda article:generate_maps(article,langs)).groupByKey()
 
 
 # Test del indice
-# Mirad que la clave es por ejemplo Python y el valor una lista con todos los articulos en los que aparezca Python nombrado
-# con un simple mapValues somos capaces de generar el ranking de forma immediate
 print(makeIndex(list_of_languages,rddWikipediaArticles).mapValues(lambda x: len(x)).collect())
 
 
 
 
 
-# toDo final
 
-def generate_ones (article,langs):
-    # muy similar a generate_maps pero en vez del articulo pongo un uno
-    return list(map(lambda lang:(lang, 1),findLanguages(langs, article)))
 
+# toDo final haciendo todo el trabajo en una sola funcion deduce (que combina groupBy ish y un aggregate ish)
+# def rankLangsReduceByKey(langs: List[String], rdd: RDD[WikipediaArticle]): List[(String, Int)] = ???
+def generate_maps(langs, article):
+    return list(filter(lambda language:article.string_appearence_in_text(language), langs))
 
 
 def rank_languages_using_reduce_by_key(langs, rdd):
-    return rdd.flatMap((lambda article:generate_ones(article,langs))).reduceByKey(lambda a,b:a+b).collect()
+    return rdd.flatMap((lambda article:generate_maps(article,langs))).reduceByKey()
+rddWikipediaArticles.reduce()
 
-print("comprobar que funciona", rank_languages_using_reduce_by_key(list_of_languages,rddWikipediaArticles))
 #wikiArticles = rdd1.map
 #  val wikiRdd: RDD[WikipediaArticle] = sc.parallelize(wikiArticles).map(x=>x).persist()
-
-# toDo, ver ahora quien es mas rapido descartando el indice invertido
-
-# Import time module
-def medir_tiempo(accion):
-    import time
-    # record start time
-    start = time.time()
-    print("START...", start)
-    variable_retorno = accion
-    print("variable_entorno...",variable_retorno)
-    # record end time
-    end = time.time()
-    print("END...", end)
-
-    # print the difference between start
-    # and end time in milli. secs
-    print("The time of execution of above program is :",
-      (end-start) * 10**3, "ms")
-
-    return variable_retorno
-
-
-# haciendo 3 filtros
-print("con 3 filtros...",medir_tiempo(rank_langs_list_ordered(list_of_languages, rddWikipediaArticles)))
-
-
-# con un ReduceByKey
-print("con reduceByKey...",medir_tiempo(rank_languages_using_reduce_by_key(list_of_languages,rddWikipediaArticles)))
-
-# con II
-index = makeIndex(list_of_languages,rddWikipediaArticles).persist()
-print(index.collect())
-# que pasa si no pongo persist()
-print("con II...",medir_tiempo(index.mapValues(lambda x: len(x)).collect()))
-
-
 
